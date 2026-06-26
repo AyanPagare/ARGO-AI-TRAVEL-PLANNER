@@ -1,0 +1,1 @@
+print(airport_codes['Mumbai'])
