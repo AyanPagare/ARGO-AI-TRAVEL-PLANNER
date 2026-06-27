@@ -4,7 +4,9 @@ import google.generativeai as genai
 import base64
 from datetime import date
 import requests
+import flight_search
 from flight_search import search_flights
+
 from dotenv import load_dotenv
 import os
 
@@ -378,6 +380,7 @@ if generate:
         destination,
         travel_date.strftime('%Y-%m-%d')
     )
+    
     flight_options=[
         flight for flight in flight_options if flight['price']<=budget
     ]

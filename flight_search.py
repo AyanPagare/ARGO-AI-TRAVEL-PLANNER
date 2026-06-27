@@ -1,5 +1,10 @@
-import http.client
+import requests
 import json
+import os 
+from dotenv import load_dotenv
+
+load_dotenv()
+FLIGHT_RAPIDAPI_KEY=os.getenv('Flight_RapidAPI_Key')
 
 
 
@@ -148,6 +153,7 @@ CITY_DATA = {
     }
 }
 def search_flights(source_city, destination_city, travel_date):
+    
     if source_city not in CITY_DATA:
         return []
     if destination_city not in CITY_DATA:
@@ -162,38 +168,41 @@ def search_flights(source_city, destination_city, travel_date):
 
 
 
-    conn = http.client.HTTPSConnection("sky-scrapper.p.rapidapi.com")
+
+    url = "https://sky-scrapper.p.rapidapi.com/api/v2/flights/searchFlights"
+
+    querystring = {
+
+        "originSkyId": origin_sky_id,
+        "destinationSkyId": destination_sky_id,
+        "originEntityId": origin_entity_id,
+        "destinationEntityId": destination_entity_id,
+        "date": travel_date,
+        "cabinClass": "economy",
+        "adults": "1",
+        "sortBy": "best",
+        "currency": "INR",
+        "market": "en-IN",
+        "countryCode": "IN"
+    }   
 
     headers = {
-        'x-rapidapi-key': "ad8d8e335emsh58018338e80b978p1d27bbjsne704fbdd5a5a",
-        'x-rapidapi-host': "sky-scrapper.p.rapidapi.com",
-        'Content-Type': "application/json"
+
+        "x-rapidapi-key": FLIGHT_RAPIDAPI_KEY,
+        "x-rapidapi-host": "sky-scrapper.p.rapidapi.com"
     }
 
-    conn.request(
-        "GET",
-        f"/api/v2/flights/searchFlights?"
-        f"originSkyId={origin_sky_id}"
-        f"&destinationSkyId={destination_sky_id}"
-        f"&originEntityId={origin_entity_id}"
-        f"&destinationEntityId={destination_entity_id}"
-        f"&date={travel_date}"
-        f"&cabinClass=economy"
-        f"&adults=1"
-        f"&sortBy=best"
-        f"&currency=INR"
-        f"&market=en-IN"
-        f"&countryCode=IN",
-        headers=headers
+    response = requests.get(
+
+        url,
+        headers=headers,
+        params=querystring
     )
 
-    res = conn.getresponse()
-    data = res.read()
-    #with open('sample_flight.json', 'w', encoding='utf-8') as f:
-        #f.write(data.decode('utf-8'))
+    print("Status Code:", response.status_code)
+    print(response.text)
 
-
-    result = json.loads(data.decode('utf-8'))
+    result = response.json()
     flight_options=[]
     
 
