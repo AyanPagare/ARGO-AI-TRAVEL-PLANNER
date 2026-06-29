@@ -30,6 +30,7 @@ def get_best_prediction(train):
     return max(predictions) if predictions else 0
 
 def flight_duration_minutes(flight):
+    print('Flight Duration:', flight['duration'])
 
     duration = flight["duration"]
 
@@ -109,9 +110,9 @@ div[role="radiogroup"] > label:hover {
 """, unsafe_allow_html=True)
 
 # ---------------- GEMINI SETUP ----------------
-
-genai.configure(api_key=os.getenv('Gemini_API_Key'))
-RAPIDAPI_KEY=os.getenv('RapidAPI_Key')
+from config import GEMINI_API_KEY, TRAIN_API_KEY
+genai.configure(api_key=GEMINI_API_KEY)
+RAPIDAPI_KEY=TRAIN_API_KEY
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
@@ -447,11 +448,24 @@ if generate:
     st.markdown('Recommendation Summary')
 
     if best_train and best_flight:
+        def  train_duration_minutes(duration):
+            duration=duration.lower().replace("","")
+            hours=0
+            minutes=0
+            if "h" in duration:
+                parts=duration.split("h")
+                hours=int(parts[0])
+                duration=parts[1]
+            if "m" in duration and duration.replace("m","") != "":
+
+                minutes=int(duration.replace("m",""))
+            return hours*60+minutes
+
         train_fare=get_min_train_fare(best_train)
         if priority == 'Cheapest':
             winner=('Train' if train_fare<=best_flight['price'] else 'Flight')
         elif priority == 'Fastest':
-            winner=('Train' if best_train['duration'] < flight_duration_minutes(best_flight) else 'Flight')
+           winner=('Train' if train_duration_minutes(best_train['duration']) < flight_duration_minutes(best_flight) else 'Flight')
         else:
             winner=('Train' if get_best_prediction(best_train)>=100 else 'Flight')
 

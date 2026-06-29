@@ -1,10 +1,7 @@
 import requests
 import json
 import os 
-from dotenv import load_dotenv
-
-load_dotenv()
-FLIGHT_RAPIDAPI_KEY=os.getenv('Flight_RapidAPI_Key')
+from config import FLIGHT_API_KEY
 
 
 
@@ -188,7 +185,7 @@ def search_flights(source_city, destination_city, travel_date):
 
     headers = {
 
-        "x-rapidapi-key": FLIGHT_RAPIDAPI_KEY,
+        "x-rapidapi-key": FLIGHT_API_KEY,
         "x-rapidapi-host": "sky-scrapper.p.rapidapi.com"
     }
 
