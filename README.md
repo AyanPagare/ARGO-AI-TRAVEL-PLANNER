@@ -1,5 +1,6 @@
 # ✈️ ARGO : AI Route Guidance & Optimization
 
+![ARGO Banner](assets/banner.png)
 ### AI-Powered Smart Travel Planner
 
 Compare trains and flights in real time and receive AI-powered travel recommendations based on price, travel time, and ticket confirmation probability.
